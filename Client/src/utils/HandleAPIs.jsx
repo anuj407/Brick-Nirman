@@ -9,10 +9,12 @@ export const fetchProducts = async (setProduct) => {
                 'Content-Type': 'application/json',
             },
         });
-        const result = await response.json();
-        
-        if (result?.data) {
-            setProduct(result.data); // ✅ Update state inside component
+        if(response?.ok){
+            const result = await response.json();
+            
+            if (result?.data) {
+                setProduct(result.data); // ✅ Update state inside component
+            }
         }
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -121,20 +123,20 @@ export const updateUserProfile = async (updatedData) => {
     }
 };
 
-export const refreshTokens = async (setUser) => {
+export const refreshTokens = async () => {
     try {
         const response = await fetch(`${apiUrl}/users/refresh-token`, {
             method: 'POST',
             credentials: 'include',
         });
-
-        const result = await response.json();
-        if (result?.data) {
-            setUser(result.data); // ✅ Update state inside component
+        if(response?.ok){
+            const result = await response.json();
+            return result; // ✅ Update state inside component
         }
         else{
-            localStorage.removeItem("username");
+            return response;
         }
+        
     } catch (error) {
         console.error("Error refreshing tokens:", error);
     }
