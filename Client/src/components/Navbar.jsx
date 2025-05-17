@@ -3,7 +3,6 @@ import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { useContext, useEffect, useState } from "react";
-import { refreshTokens } from "../utils/HandleAPIs";
 import { getSupplierById } from "../utils/HandleSupplier";
 import PopUp_Message from "./PopUp_Message";
 import { RiErrorWarningLine } from "../assets/assets.js";
@@ -16,7 +15,6 @@ export default function Navbar({
 }) {
   const {
     user,
-    setUser,
     checkSuppliers,
     setCheckSuppliers,
     setIsSupplierOpen,
@@ -27,17 +25,12 @@ export default function Navbar({
     setSuppliers,
     showMsg,
     setshowMsg,
+    tokenResponse
   } = useContext(AppContext);
   const navigate = useNavigate();
   const UserLoggedIn = !!user;
 
-  useEffect(() => {
-    const hasUsername = localStorage.getItem("username"); // ✅ check localStorage
-    if (hasUsername) {
-      refreshTokens(setUser);
-    }
-  }, [setUser]);
-
+ 
   const handleLoginButton = (e) => {
     e.stopPropagation();
     setIsLoginOpen(true);
@@ -81,7 +74,13 @@ export default function Navbar({
       }
     });
   };
-
+//Check check user Session
+useEffect(()=>{
+  if(tokenResponse == 401){
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+  }
+})
   const [supplierBtn, setSupplierBtn] = useState(false);
   useEffect(() => {
     if (!supplierId) {
@@ -130,8 +129,10 @@ export default function Navbar({
           ))}
         </div>
         <div className="flex items-center space-x-4">
-          <div
-            className={`${UserLoggedIn ? `hidden` : `block`} flex space-x-4`}
+          
+          { tokenResponse ? ''
+            : <div
+            className={` flex space-x-4`}
           >
             <button
               className="px-5 py-1 border border-gray-400 hover:bg-gray-950 cursor-pointer rounded-lg transition"
@@ -145,7 +146,8 @@ export default function Navbar({
             >
               Register
             </button>
-          </div>
+              </div>
+          }
           {supplierBtn && (
             <button
               onClick={() => setIsSupplierOpen(true)}
@@ -157,7 +159,7 @@ export default function Navbar({
           <div
             onClick={() => handleProfile()}
             className={`${
-              UserLoggedIn ? `block` : `hidden`
+              tokenResponse ? `block` : `hidden`
             } max-sm:pr-2 flex items-center space-x-2`}
           >
             <img
