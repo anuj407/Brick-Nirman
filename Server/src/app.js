@@ -9,24 +9,23 @@ import AddToCartRouter from './routes/addToCart.routes.js';
 import userRouter from './routes/user.routes.js';
 import supplierRouter from './routes/supplier.routes.js';
 
-// const allowedOrigins = [
-//   'https://brick-nirman-frontend.vercel.app',
-//   'http://localhost:5173',
-// ];
+const allowedOrigins = [
+  'http://localhost:5173',
+];
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin) return callback(null, true);
-//       if (allowedOrigins.includes(origin)) {
-//         return callback(null, true);
-//       } else {
-//         return callback(new Error('Not allowed by CORS'));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // Optional: Set headers manually for extra control
 app.use((req, res, next) => {
