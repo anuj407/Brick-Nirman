@@ -3,13 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import ProductCard from "../components/ProductCard";
 import { useNavigate } from "react-router-dom";
-import { fetchProducts } from "../utils/HandleAPIs";
+import { fetchProducts, getUserProfile, refreshTokens } from "../utils/HandleAPIs";
 import SupplierCard from "../components/SupplierCard";
 import HomeSlider from "../components/HomeSlider";
 import { getAllSuppliers } from "../utils/HandleSupplier";
 
 function Home() {
-  const { product, setProduct, suppliers, setSuppliers } =
+  const { product, setProduct, suppliers, setSuppliers ,setTokenResponse,setUser} =
     useContext(AppContext);
   const [loadingProducts, setLoadingProducts] = useState(true); // Loading state for products
   const [loadingSuppliers, setLoadingSuppliers] = useState(true); // Loading state for suppliers
@@ -22,6 +22,25 @@ function Home() {
       navigate("/products");
     }
   };
+
+  useEffect(() => {
+    const getTokens = async () => {
+      const result = await refreshTokens();
+      console.log(result);
+      
+      setTokenResponse(result.success)
+      // You can call setUser(result.user) here if needed
+    };
+  
+    getTokens();
+  }, []);
+
+  useEffect(()=>{
+    const getProfile = async()=>{
+      await getUserProfile(setUser)
+    }
+    getProfile()
+  },[])
 
   useEffect(() => {
     const fetchData = async () => {
