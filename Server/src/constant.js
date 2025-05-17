@@ -1,1 +1,1 @@
-// export const DB_NAME = 'brickNirman';
+export const DB_NAME = 'brickNirman';
