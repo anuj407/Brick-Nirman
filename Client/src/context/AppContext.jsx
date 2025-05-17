@@ -26,6 +26,8 @@ export const AppProvider = ({ children }) => {
   const [ orders, setOrders] = useState(null);
   const [forgotPasswordOpen,setForgotPasswordOpen] = useState(false)
    const [showMsg, setshowMsg] = useState(false);
+   //check Refresh Token
+   const [tokenResponse,setTokenResponse]=useState(false)
   return (
     <AppContext.Provider
       value={{
@@ -64,7 +66,9 @@ export const AppProvider = ({ children }) => {
         forgotPasswordOpen,
         setForgotPasswordOpen,
         showMsg,
-        setshowMsg
+        setshowMsg,
+        tokenResponse,
+        setTokenResponse
       }}
     >
       {children}
