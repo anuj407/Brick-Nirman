@@ -13,7 +13,7 @@ const Registration = () => {
   const [role, setRole] = useState("user");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { setIsRegisterOpen, setIsSupplierOpen } = useContext(AppContext);
+  const { setIsRegisterOpen, setIsSupplierOpen ,setIsLoginOpen } = useContext(AppContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,11 +26,13 @@ const Registration = () => {
       confirmPassword,
     };
     registerUser(userInputData, (data) => {
-      console.log(data);
-      
       if (data?.role === "supplier") {
         setIsRegisterOpen(false);
         setIsSupplierOpen(true);
+      }
+      else{
+        setIsRegisterOpen(false);
+        setIsLoginOpen(true)
       }
     });
   };
