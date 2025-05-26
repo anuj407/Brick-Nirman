@@ -6,7 +6,7 @@ import { AppContext } from "../context/AppContext";
 
 export default function Footer() {
   const navigate = useNavigate();
-  const { checkSuppliers ,setIsSupplierOpen}= useContext(AppContext)
+  const { checkSuppliers ,setIsSupplierOpen ,tokenResponse ,setshowMsg}= useContext(AppContext)
  // Hnadle Quick Links
   const handleQuickLinks = (item) => {
     const routes = {
@@ -36,7 +36,15 @@ export default function Footer() {
 
   // Handle Apply Button
   const handleApplyBtn = () => {
-    setIsSupplierOpen(true);
+    if(tokenResponse){
+      setshowMsg(true);
+      setTimeout(() => {
+        setshowMsg(false);
+      }, 2000);
+      if(!checkSuppliers) {
+       setIsSupplierOpen(true);
+      }
+    }
   };
   return (
     <footer className="bg-gray-800 text-gray-300 p-6 sm:p-10">
