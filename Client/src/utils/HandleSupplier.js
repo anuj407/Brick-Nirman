@@ -32,7 +32,7 @@ export const getAllSuppliers = async (setSuppliers) => {
 };
 
 
-export const getSupplierById = async (id, setSuppliers,setCheckSuppliers) => {
+export const getSupplierById = async (id, setSuppliers,setIsSuppliers) => {
     try {
         const response = await fetch(`${apiUrl}/suppliers/${id}`,{
             method: 'GET',
@@ -42,13 +42,17 @@ export const getSupplierById = async (id, setSuppliers,setCheckSuppliers) => {
             },
         });
         const result = await response.json();
+        console.log("Supplier Data:", result);
+        
         if (result?.data) {
             setSuppliers(result.data);
+            console.log("Supplier Data:", result.data);
+            
             if(result?.data?.length !== 0) {
-                setCheckSuppliers(true);
+                setIsSuppliers(true);
             }
             else {
-                setCheckSuppliers(false);
+                setIsSuppliers(false);
             }
         }
     } catch (error) {
