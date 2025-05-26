@@ -33,7 +33,9 @@ const SupplierProfile = () => {
 
   // Fetch supplier's products
   useEffect(() => {
+    
     if (id) {
+      console.log("hi");
       fetchProductsBySupplierId(id, setSupplierProducts);
       window.scrollTo(0, 0);
     }
@@ -55,6 +57,7 @@ const SupplierProfile = () => {
     },
     [setSuppliers]
   );
+// console.log("Supplier Products:", supplierProducts);
 
   const handleCreateProduct = async (formData) => {
     try {
