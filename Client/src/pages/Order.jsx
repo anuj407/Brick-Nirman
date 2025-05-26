@@ -3,8 +3,8 @@ import { AppContext } from "../context/AppContext";
 import { cancelOrderById, fetchAllOrders } from "../utils/HandleProductAPIs";
 
 function Order() {
-  const { orders, setOrders } = useContext(AppContext);
-  const userId = localStorage.getItem("userId");
+  const { orders, setOrders , user} = useContext(AppContext);
+  const userId = user?._id; // Get user ID from context
 
   useEffect(() => {
     if (userId) {
