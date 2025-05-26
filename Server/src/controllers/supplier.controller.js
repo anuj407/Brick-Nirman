@@ -58,12 +58,13 @@ export const getAllSuppliers = asyncHandler(async (req, res) => {
 export const getSupplierById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const supplierId = id
-  
+  console.log('supplierId: ', supplierId);
   const supplier = await Supplier.find({supplierId: supplierId});
 
   if (!supplier) {
     throw new ApiError(404, 'Supplier not found');
   }
+console.log('supplier: ', supplier);
 
   res
     .status(200)
