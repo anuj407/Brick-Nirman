@@ -56,6 +56,7 @@ export const fetchProductsBySupplierId = async (
 
     const result = await response.json();
     if (result?.data) {
+      console.log("Supplier Products:", result.data);
       setSupplierProducts(result.data); // ✅ Update products state
     }
   } catch (error) {
