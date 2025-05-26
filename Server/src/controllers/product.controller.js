@@ -88,8 +88,11 @@ export const getProductById = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, data, message));
 });
 export const getProductsBySupplierId = asyncHandler(async (req, res) => {
+  console.log("Supplier ID: " + req.params.id);
   
   const products = await Product.find({ supplierId: req.params.id });
+  console.log("products", products);
+  
   let message;
   
   if (!products || products.length === 0) {
