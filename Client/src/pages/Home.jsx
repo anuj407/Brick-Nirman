@@ -26,9 +26,9 @@ function Home() {
   useEffect(() => {
     const getTokens = async () => {
       const result = await refreshTokens();
-      console.log(result);
-      
-      setTokenResponse(result.success)
+      if(result.success) {
+        setTokenResponse(true)
+      }
       // You can call setUser(result.user) here if needed
     };
   
@@ -70,29 +70,25 @@ function Home() {
         </div>
         <section className="w-full bg-gray-800 text-white py-16 text-center">
           <h2 className="text-3xl font-semibold">Welcome to Brick Nirman!</h2>
-          <p className="max-w-2xl text-xl mx-auto mt-4 text-gray-300">
-            If you are one of those who want some creative and innovative things
-            in the interior or exterior parts of your project, then you are in
-            the right place! With decades of experience and close working with
-            architects, we have developed bricks that provide the right balance
-            between sophisticated looks and long-term sustainability results.
+         <p className="max-w-2xl text-xl mx-auto mt-4 text-gray-300">
+            Whether you're building your dream home or working on a large-scale construction project, Brick Nirman offers the perfect blend of quality and aesthetics. With decades of experience and strong collaborations with architects and builders, we manufacture and supply premium bricks that ensure durability, visual appeal, and long-term value for every type of structure.
           </p>
           <div className="mt-10 grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto border-t border-gray-600 pt-10">
             <div>
-              <p className="text-3xl font-bold">25000+</p>
-              <p className="text-gray-400">Projects Served</p>
+              <p className="text-3xl font-bold">25,000+</p>
+              <p className="text-gray-400">Projects Delivered</p>
             </div>
             <div>
               <p className="text-3xl font-bold">210+</p>
-              <p className="text-gray-400">Variants</p>
+              <p className="text-gray-400">Brick Designs & Variants</p>
             </div>
             <div>
               <p className="text-3xl font-bold">35</p>
-              <p className="text-gray-400">Years of Brick Excellence</p>
+              <p className="text-gray-400">Years of Trusted Excellence</p>
             </div>
             <div>
               <p className="text-3xl font-bold">1+</p>
-              <p className="text-gray-400">Countries Reached</p>
+              <p className="text-gray-400">Countries We Export To</p>
             </div>
           </div>
         </section>
@@ -114,8 +110,7 @@ function Home() {
                 </p>
               ) : (
                 product
-                  ?.slice(7)
-                  .map((product, index) => (
+                  ?.map((product, index) => (
                     <ProductCard key={index} product={product} />
                   ))
               )}
