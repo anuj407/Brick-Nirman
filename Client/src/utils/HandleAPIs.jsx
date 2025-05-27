@@ -22,22 +22,25 @@ export const fetchProducts = async (setProduct) => {
 };
 
 export const refreshTokens = async () => {
-    try {
-        const response = await fetch(`${apiUrl}/users/refresh-token`, {
-            method: 'POST',
-            credentials: 'include',
-        });
-        if(response?.ok){
-            const result = await response.json();
-            return result; // ✅ Update state inside component
-        }
-        else{
-            return response;
-        }
-        
-    } catch (error) {
-        console.error("Error refreshing tokens:", error);
+  try {
+    const response = await fetch(`${apiUrl}/users/refresh-token`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response?.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      return response;
     }
+  } catch (error) {
+    console.error("Error refreshing tokens:", error);
+  }
 };
 
 
