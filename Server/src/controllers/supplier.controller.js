@@ -75,14 +75,14 @@ console.log('supplier: ', supplier);
 export const updateSupplier = asyncHandler(async (req, res) => {
   const { name, gstNumber, phone, email, address, serviceArea } = req.body;
   const supplier = await Supplier.findOne({ supplierId: req.user?._id });
+  const user = await User.findOne({ _id: req.user?._id });
+  console.log("user: ", user);
+  
   let avatarUrl;
   if (req.file) {
     const avatarLocalPath = req.file.path;
-    console.log(avatarLocalPath);
 
     const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
-    console.log('avatarResponse: ', avatarResponse);
-
     if (!avatarResponse) {
       throw new ApiError(500, 'Failed to upload avatar file');
     }
@@ -94,6 +94,7 @@ export const updateSupplier = asyncHandler(async (req, res) => {
   }
   if (avatarUrl) {
     supplier.image = avatarUrl;
+    user.avatar = avatarUrl; // Update user image as well
   }
   if (name) {
     supplier.name = name;
@@ -115,6 +116,7 @@ export const updateSupplier = asyncHandler(async (req, res) => {
   }
 
   await supplier.save();
+  await user.save(); // Save the updated user as well
   const updatedSupplier = await Supplier.find({ supplierId: req.user?._id });
   res
     .status(200)

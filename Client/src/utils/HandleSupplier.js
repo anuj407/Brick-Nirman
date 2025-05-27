@@ -60,26 +60,21 @@ export const getSupplierById = async (id, setSuppliers,setIsSuppliers) => {
     }
 };
 
-export const updateSupplier = async (updatedData, setSupplier) => {
-    try {
-        const formData = new FormData();
-        if (updatedData.image) {
-            formData.append('avatar', updatedData.image); // must match multer field name
-        }
+export const updateSupplier = async (formData, setSupplier) => {
+  try {
+    const response = await fetch(`${apiUrl}/suppliers/update`, {
+      method: 'PUT',
+      credentials: 'include',
+      body: formData, // send the actual FormData
+    });
 
-        const response = await fetch(`${apiUrl}/suppliers/update`, {
-            method: 'PUT',
-            credentials: 'include',
-            body: formData, // no headers here
-        });
-
-        const result = await response.json();
-        if (result?.data) {
-            setSupplier(result.data);
-        }
-    } catch (error) {
-        console.error("Error updating supplier:", error);
+    const result = await response.json();
+    if (result?.data) {
+      setSupplier(result.data);
     }
+  } catch (error) {
+    console.error("Error updating supplier:", error);
+  }
 };
 
 

@@ -18,6 +18,7 @@ const SupplierProfile = () => {
     setSuppliers,
     setCheckSuppliers,
     setSupplierProducts,
+    user
   } = useContext(AppContext);
 
   const { id } = useParams();
@@ -31,32 +32,40 @@ const SupplierProfile = () => {
     if (id) getSupplierById(id, setSuppliers, setCheckSuppliers);
   }, [id, setCheckSuppliers, setSuppliers]);
 
+  const [allowEdit, setAllowEdit] = useState(false);
   // Fetch supplier's products
   useEffect(() => {
-    
     if (id) {
-      console.log("hi");
       fetchProductsBySupplierId(id, setSupplierProducts);
       window.scrollTo(0, 0);
     }
-  }, [id, setSupplierProducts]);
+    if(user){
+      if(id === user._id) {
+        setAllowEdit(true);
+      }
+    }
+    else{
+      setAllowEdit(false);
+    }
+  }, [id, setSupplierProducts, user]);
 
   const handleClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = useCallback(
-    (e) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
-        updateSupplier(formData, setSuppliers);
-        e.target.value = null;
-      }
-    },
-    [setSuppliers]
-  );
+ const handleFileChange = useCallback(
+  (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("avatar", file); // ensure field name matches what multer expects
+      updateSupplier(formData, setSuppliers);
+      e.target.value = null;
+    }
+  },
+  [setSuppliers]
+);
+
 // console.log("Supplier Products:", supplierProducts);
 
   const handleCreateProduct = async (formData) => {
@@ -109,12 +118,14 @@ const SupplierProfile = () => {
             </p>
           </div>
         </div>
-        <button
+        {allowEdit &&
+          <button
           onClick={handleClick}
           className="flex items-center cursor-pointer gap-2 text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm"
-        >
-          <Pencil className="w-4 h-4" /> Edit Profile
-        </button>
+          >
+            <Pencil className="w-4 h-4" /> Edit Profile
+          </button>
+        }
         <input
           type="file"
           ref={fileInputRef}
@@ -128,12 +139,15 @@ const SupplierProfile = () => {
       <div className="max-w-5xl mx-auto">
         <div className="w-full flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold mb-4">Posts</h2>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 cursor-pointer border border-gray-100 hover:text-black hover:bg-gray-200 px-4 py-2 rounded-full text-sm"
-          >
-            <Pencil className="w-4 h-4" /> Create Post
-          </button>
+          
+          { allowEdit &&
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 cursor-pointer border border-gray-100 hover:text-black hover:bg-gray-200 px-4 py-2 rounded-full text-sm"
+            >
+              <Pencil className="w-4 h-4" /> Create Post
+            </button>
+          }
         </div>
 
         <CreatePostModal
