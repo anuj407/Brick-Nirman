@@ -2,11 +2,12 @@ import { IoMdMenu } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { getSupplierById } from "../utils/HandleSupplier";
 import PopUp_Message from "./PopUp_Message";
 import { RiErrorWarningLine } from "../assets/assets.js";
 import { fetchProductsBySupplierId } from "../utils/HandleProductAPIs.js";
+import { refreshTokens } from "../utils/HandleAPIs.jsx";
 
 export default function Navbar({
   setIsSidebarOpen,
@@ -16,19 +17,22 @@ export default function Navbar({
   const {
     user,
     checkSuppliers,
-    setCheckSuppliers,
+    setIsSuppliers,
     setIsSupplierOpen,
     searchTerm,
     setSearchTerm,
     setSupplierProducts,
-    suppliers,
     setSuppliers,
     showMsg,
     setshowMsg,
-    tokenResponse
+    tokenResponse,
+    setTokenResponse,
+    setSupplierBtn,
+    supplierBtn,
+    
   } = useContext(AppContext);
   const navigate = useNavigate();
-  const UserLoggedIn = !!user;
+  const supplierId = user?._id;
 
  
   const handleLoginButton = (e) => {
@@ -50,7 +54,7 @@ export default function Navbar({
     };
     navigate(routes[item] || "/");
   };
-  const supplierId = localStorage.getItem("userId");
+
   const handleProfile = () => {
     fetchProductsBySupplierId(supplierId, setSupplierProducts);
     if (!supplierId) {
@@ -62,7 +66,7 @@ export default function Navbar({
       return;
     }
 
-    getSupplierById(supplierId, setSuppliers, setCheckSuppliers).then(() => {
+    getSupplierById(supplierId, setSuppliers, setIsSuppliers).then(() => {
       if (checkSuppliers) {
         navigate(`/supplier-profile/${supplierId}`);
         setshowMsg(false);
@@ -75,23 +79,38 @@ export default function Navbar({
     });
   };
 //Check check user Session
-useEffect(()=>{
-  if(tokenResponse == 401){
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
-  }
-})
-  const [supplierBtn, setSupplierBtn] = useState(false);
-  useEffect(() => {
-    if (!supplierId) {
-      setSupplierBtn(false);
-      return;
-    }
+useEffect(() => {
+  const getTokens = async () => {
+    const result = await refreshTokens();
 
-    getSupplierById(supplierId, setSuppliers, setCheckSuppliers).then(() => {
-      setSupplierBtn(!checkSuppliers);
+    if (result?.success) {
+      setTokenResponse(true);
+    } else {
+      setTokenResponse(false);
+    }
+  };
+
+  getTokens();
+}, [setTokenResponse]); // run once on mount
+
+useEffect(() => {
+  if (tokenResponse) {
+    console.log("Token Response:", tokenResponse);
+    console.log("Check Suppliers:", checkSuppliers);
+
+    // Call getSupplierById
+    if(supplierId)
+    getSupplierById(supplierId, setSuppliers, setIsSuppliers).then(() => {
+      if (checkSuppliers) {
+        setSupplierBtn(false);
+      } else {
+        setSupplierBtn(true);
+      }
     });
-  }, [checkSuppliers, setCheckSuppliers, setSuppliers, supplierId]);
+  } else {
+    setSupplierBtn(false);
+  }
+}, [tokenResponse, checkSuppliers, supplierId, setSuppliers, setIsSuppliers, setSupplierBtn]);
 
   return (
     <>
@@ -164,7 +183,7 @@ useEffect(()=>{
           >
             <img
               src={
-                suppliers?.[0]?.image ||
+                user?.avatar ||
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
               }
               alt="User"
