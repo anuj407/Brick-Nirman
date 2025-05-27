@@ -21,6 +21,25 @@ export const fetchProducts = async (setProduct) => {
     }
 };
 
+export const refreshTokens = async () => {
+    try {
+        const response = await fetch(`${apiUrl}/users/refresh-token`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+        if(response?.ok){
+            const result = await response.json();
+            return result; // ✅ Update state inside component
+        }
+        else{
+            return response;
+        }
+        
+    } catch (error) {
+        console.error("Error refreshing tokens:", error);
+    }
+};
+
 
 export const registerUser = async (userInputData,setUser) => {
     try {
@@ -35,7 +54,6 @@ export const registerUser = async (userInputData,setUser) => {
         const result = await response.json();
         if (result?.data) {
             setUser(result.data); // ✅ Update state inside component
-            localStorage.setItem("userId", result.data._id);
         }
     } catch (error) {
         console.error("Error registering user:", error);
@@ -57,8 +75,6 @@ export const loginUser = async (loginData, setUser,setIsLoginOpen) => {
         if (result?.data) {
             setUser(result.data); // ✅ Update state inside component
             setIsLoginOpen(false); // ✅ Reload page to reflect changes
-            localStorage.setItem("userId", result.data._id);
-            localStorage.setItem("username", result.data.fullName);
         }
     } catch (error) {
         console.error("Error logging in:", error);
@@ -79,8 +95,7 @@ export const logoutUser = async (setResponse) => {
         if (result?.statusCode === 200) {
             console.log("User logged out successfully")
             setResponse(result); // ✅ Update state inside component
-            localStorage.removeItem("username");
-            localStorage.removeItem("userId", result.data._id);
+            return true;
         }
     } catch (error) {
         console.error("Error logging out:", error);
@@ -110,6 +125,7 @@ export const updateUserProfile = async (updatedData) => {
     try {
         const response = await fetch(`${apiUrl}/users/update-password`, {
             method: 'PUT',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -123,24 +139,6 @@ export const updateUserProfile = async (updatedData) => {
     }
 };
 
-export const refreshTokens = async () => {
-    try {
-        const response = await fetch(`${apiUrl}/users/refresh-token`, {
-            method: 'POST',
-            credentials: 'include',
-        });
-        if(response?.ok){
-            const result = await response.json();
-            return result; // ✅ Update state inside component
-        }
-        else{
-            return response;
-        }
-        
-    } catch (error) {
-        console.error("Error refreshing tokens:", error);
-    }
-};
 
 // sendOTP API call
 export const sendOTP = async (number) => {
