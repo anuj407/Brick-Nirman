@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Star, CheckCircle } from "lucide-react";
+import { getSupplierById } from "../utils/HandleSupplier";
+import { fetchProductsBySupplierId } from "../utils/HandleProductAPIs";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const SupplierCard = ({ supplier }) => {
   // const renderRatingStars = (rating) => {
@@ -33,10 +37,22 @@ const SupplierCard = ({ supplier }) => {
   // };
   // console.log("supplier in supplierCard arsh: : ", supplier);
 
-  if (!supplier) {
-    return <div className="text-gray-400">Supplier data is unavailable.</div>;
-  }
+  
 
+  const {setSuppliers, setSupplierProducts } = useContext(AppContext);
+  const navigate = useNavigate();
+  const handleProfile = () => {
+      getSupplierById(supplier?.supplierId, setSuppliers);
+      fetchProductsBySupplierId(
+        supplier?.supplierId,
+        setSupplierProducts
+      );
+      navigate(`/supplier-profile/${supplier?.supplierId}`);
+  };
+
+  if(!supplier) {
+      return <div className="text-gray-400">Supplier data is unavailable.</div>;
+  }
   return (
     <div className="bg-gradient-to-b from-gray-800 to-gray-700 p-6 rounded-xl shadow-xl border border-gray-600 hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-out">
       <div className="flex flex-col items-center gap-6 text-center md:text-left">
@@ -90,8 +106,8 @@ const SupplierCard = ({ supplier }) => {
       </div>
 
       <div className="mt-6">
-        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-transform transform hover:scale-105 shadow-md">
-          View Products
+        <button onClick={handleProfile} className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-transform transform hover:scale-105 shadow-md">
+          View Supplier
         </button>
       </div>
     </div>
