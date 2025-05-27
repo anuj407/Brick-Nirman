@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import SupplierRegistration from "./SupplierRegistration";
 import ForgotPassword from "./ForgotPassword";
+import { getUserProfile, refreshTokens } from "../utils/HandleAPIs";
+import { getSupplierById } from "../utils/HandleSupplier";
 
 export default function Dashboard() {
   const { 
@@ -16,10 +18,16 @@ export default function Dashboard() {
     isRegisterOpen, setIsRegisterOpen ,
     isSupplierOpen, setIsSupplierOpen,
     forgotPasswordOpen ,setForgotPasswordOpen,
-    setshowMsg
+    setshowMsg, setTokenResponse ,
+    setSuppliers ,setIsSuppliers,
+    checkSuppliers, setSupplierBtn,
+    setUser, user
   } = useContext(AppContext);
   
   const navigate = useNavigate()
+  const userId = user?._id; // Get the user ID from the user object
+  console.log("userId:", userId);
+  
   //side Nav Selection
   const handleSideNav = (value) => {
     setSideNavSelect(value);
@@ -34,7 +42,6 @@ export default function Dashboard() {
     };
   
     const protectedRoutes = ['Favorites', 'Carts', 'Orders'];
-    const userId = localStorage.getItem('userId');
   
     if (routes[value]) {
       if (protectedRoutes.includes(value)) {
@@ -57,11 +64,36 @@ export default function Dashboard() {
     event.stopPropagation();
     setPopUp(false);
   };
+  
+useEffect(() => {
+  // get Logged In user Data
+    const getProfile = async()=>{
+      await getUserProfile(setUser)
+    }
+    getProfile()
 
-  useEffect(() => {
-    document.body.style.overflow =
-      isLoginOpen || isRegisterOpen ? "hidden" : "auto";
-  }, [isLoginOpen, isRegisterOpen]);
+ // verify if user is logged in
+    const getTokens = async () => {
+      const result = await refreshTokens();
+      if(result.success) {
+        setTokenResponse(true)
+         // Check if supplierId is available
+         if(userId){
+           getSupplierById(userId, setSuppliers, setIsSuppliers).then(() => {
+               setSupplierBtn(!checkSuppliers);
+             });
+         }
+      }
+      // You can call setUser(result.user) here if needed
+    };
+    getTokens();
+
+
+  
+  document.body.style.overflow =
+    isLoginOpen || isRegisterOpen ? "hidden" : "auto";
+}, [checkSuppliers, isLoginOpen, isRegisterOpen, setIsSuppliers, setSupplierBtn, setSuppliers, setTokenResponse, setUser, userId]);
+
 
   return (
     <div className="w-full">
