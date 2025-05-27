@@ -19,7 +19,7 @@ export const AppProvider = ({ children }) => {
   const [isSupplierOpen, setIsSupplierOpen] = useState(false);
   //supplier details
   const [suppliers, setSuppliers] = useState(null);
-  const [checkSuppliers, setCheckSuppliers] = useState(false);
+  const [checkSuppliers, setIsSuppliers] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   // Single Supplier Products
   const [supplierProducts, setSupplierProducts] = useState(null);
@@ -28,6 +28,7 @@ export const AppProvider = ({ children }) => {
    const [showMsg, setshowMsg] = useState(false);
    //check Refresh Token
    const [tokenResponse,setTokenResponse]=useState(false)
+   const [supplierBtn, setSupplierBtn] = useState(false);
   return (
     <AppContext.Provider
       value={{
@@ -56,7 +57,7 @@ export const AppProvider = ({ children }) => {
         suppliers,
         setSuppliers,
         checkSuppliers,
-        setCheckSuppliers,
+        setIsSuppliers,
         searchTerm,
         setSearchTerm,
         supplierProducts,
@@ -68,7 +69,9 @@ export const AppProvider = ({ children }) => {
         showMsg,
         setshowMsg,
         tokenResponse,
-        setTokenResponse
+        setTokenResponse,
+        supplierBtn,
+        setSupplierBtn
       }}
     >
       {children}
