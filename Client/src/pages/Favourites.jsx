@@ -4,14 +4,14 @@ import FavouriteCard from "../components/FavouriteCard";
 import { fetchFavProducts } from "../utils/HandleProductAPIs";
 
 function Favourites() {
-  const { favProduct, setFavProduct } = useContext(AppContext);
+  const { favProduct, setFavProduct ,user } = useContext(AppContext);
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const userId = user?._id; // Get user ID from context
     if (userId) {
       fetchFavProducts(setFavProduct);
     }
     window.scrollTo(0, 0);
-  }, [setFavProduct]);
+  }, [setFavProduct, user?._id]);
   return (
     <>
       <div className=" bg-gradient-to-br from-gray-800 to-gray-900 py-10 px-4">
