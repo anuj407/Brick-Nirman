@@ -9,8 +9,11 @@ import {
   checkCart,
 } from "../utils/HandleProductAPIs";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 function ProductCard({ product }) {
+  const {user} = useContext(AppContext);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isCarted, setIsCarted] = useState(false);
   const [hover, setHover] = useState(false);
@@ -50,12 +53,12 @@ function ProductCard({ product }) {
   };
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const userId = user?._id; // Get user ID from context
     if (userId) {
       checkFav(product._id, setIsFavorited);
       checkCart(product._id, setIsCarted);
     }
-  }, [setIsFavorited, setIsCarted]);
+  }, [setIsFavorited, setIsCarted, product._id, user?._id]);
 
   const toggleFavorite = () => {
     isFavorited ? RemoveFavProducts(product._id) : AddFavProducts(product._id);
