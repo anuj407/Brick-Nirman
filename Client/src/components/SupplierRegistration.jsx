@@ -4,7 +4,7 @@ import { registerSupplier } from "../utils/HandleSupplier";
 import { AppContext } from "../context/AppContext";
 
 const SupplierRegistration = () => {
-  const { setIsSupplierOpen } = useContext(AppContext);
+  const { setIsSupplierOpen , user } = useContext(AppContext);
   const [name, setName] = useState("");
   const [gstNumber, setGstNumber] = useState("");
   const [phone, setPhone] = useState("");
@@ -43,7 +43,7 @@ const SupplierRegistration = () => {
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    const supplierId = localStorage.getItem("userId");
+    const supplierId = user?._id; // Assuming user context provides the supplier ID
     const supplierData = {
       supplierId,
       name,
