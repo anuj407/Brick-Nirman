@@ -16,7 +16,7 @@ import { verifyJwt } from '../middlewares/auth.middleware.js';
 const router = Router();
 
 // User Registration
-router.route('/register').post(upload.single('avatar'), registerUser);
+router.route('/register').post(registerUser);
 
 // User Login
 router.route('/login').post(loginUser);

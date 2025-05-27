@@ -55,21 +55,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'User already exists');
   }
 
-  // console.log(req.files.avatar);
-  let avatarUrl;
-  if (req.file) {
-    const avatarLocalPath = req.file.path;
-    console.log(avatarLocalPath);
-
-    const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
-    console.log('avatarResponse: ', avatarResponse);
-
-    if (!avatarResponse) {
-      throw new ApiError(500, 'Failed to upload avatar file');
-    }
-
-    avatarUrl = avatarResponse.url;
-  }
 
   // Create new user
   const user = await User.create({
@@ -77,7 +62,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     email,
     phone,
     address,
-    avatar: avatarUrl, // This will be undefined if no avatar was uploaded
     role,
     password,
   });
@@ -144,27 +128,22 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 
   const user = await User.findById(req.user._id);
   if (!user) throw new ApiError(404, 'User not found');
-  if (fullName) {
-    user.fullName = fullName;
-  }
-  if (email) {
-    user.email = email;
-  }
-  if (phone) {
-    user.phone = phone;
-  }
-  if (address) {
-    user.address = address;
-  }
-  if (password) {
-    user.password = password;
-  }
+
+  if (fullName) user.fullName = fullName;
+  if (email) user.email = email;
+  if (phone) user.phone = phone;
+  if (address) user.address = address;
+  if (password) user.password = password;
+
   await user.save();
-  const updatedUser = await User.findOne(req.user?._id);
+
+  const updatedUser = await User.findById(req.user._id).select('-password');
+
   res.json(
     new ApiResponse(200, updatedUser, 'User profile updated successfully')
   );
 });
+
 export const updatePassword = asyncHandler(async (req, res) => {
   const { phone, password } = req.body;
 
