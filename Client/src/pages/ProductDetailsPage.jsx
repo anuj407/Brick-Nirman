@@ -13,7 +13,7 @@ import { getSupplierById } from "../utils/HandleSupplier";
 function ProductDetailsPage() {
   const { id } = useParams(); // ✅ useParams inside the component
   const navigate = useNavigate(); // ✅ navigate for going back
-  const { productById, setProductById, setSuppliers, setSupplierProducts } =
+  const { productById, setProductById, setSuppliers, setSupplierProducts, user ,setshowMsg } =
     useContext(AppContext);
   const [isCarted, setIsCarted] = useState(false);
 
@@ -33,11 +33,12 @@ function ProductDetailsPage() {
 
   // Check cart status *after* productById is loaded
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const userId = user?._id; // Get user ID from context
     if (userId) {
       checkCart(productById?.product._id, setIsCarted);
     }
-  }, [productById, setIsCarted]);
+  }, [productById, setIsCarted, user?._id]);
+
 
   const toggleCart = () => {
     isCarted
@@ -45,6 +46,18 @@ function ProductDetailsPage() {
       : AddCartProduct(productById?.product._id, productById?.product.price);
     setIsCarted(!isCarted);
   };
+
+  const handleAddToCart = () => {
+    if (!user) {
+      setshowMsg(true);
+      setTimeout(() => {
+        setshowMsg(false);
+      }, 2000);
+      return;
+    }
+    toggleCart();
+  }
+  
 
   if (!productById) {
     return (
@@ -104,18 +117,18 @@ function ProductDetailsPage() {
           {/* Action Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
             <button
-              onClick={toggleCart}
+              onClick={handleAddToCart}
               className={`${
                 isCarted
                   ? "bg-transparent border border-blue-600 text-blue-600"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
-              } text-lg px-6 py-3 rounded-md transition`}
+              } text-lg cursor-pointer px-6 py-3 rounded-md transition`}
             >
               {isCarted ? "Remove from Cart" : "Add To Cart"}
             </button>
 
             <button
-              className="bg-gray-700 hover:bg-gray-600 text-white text-lg px-6 py-3 rounded-md transition"
+              className="bg-gray-700 hover:bg-gray-600 cursor-pointer text-white text-lg px-6 py-3 rounded-md transition"
               onClick={() => handleProfile()}
             >
               View Supplier Profile
@@ -128,7 +141,7 @@ function ProductDetailsPage() {
       <div className="mt-10 text-center">
         <button
           onClick={() => navigate(-1)}
-          className="text-sm text-gray-400 hover:text-gray-200 underline"
+          className="text-sm text-gray-400 cursor-pointer hover:text-gray-200 underline"
         >
           ← Go Back
         </button>
