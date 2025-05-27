@@ -8,6 +8,7 @@ import {
 import { logoutUser } from "../utils/HandleAPIs.jsx";
 import { useContext, useEffect, useState, useRef } from "react";
 import { AppContext } from "../context/AppContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({
   isSidebarOpen,
@@ -18,9 +19,14 @@ export default function Sidebar({
   const [userLogout, setResponse] = useState(null);
   const { setUser } = useContext(AppContext);
   const sidebarRef = useRef();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    const respopnse = await logoutUser(setResponse);
+   if (respopnse){
+    navigate("/");
+    window.scrollTo(0, 0);
+   }
 
-  const handleLogout = () => {
-    logoutUser(setResponse);
   };
 
   useEffect(() => {
