@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static('public'));
 app.use(cookieParser());
 app.options('*', cors({
-  origin: allowedOrigin,
+  origin: "https://brick-nirman.vercel.app",
   credentials: true,
 }));
 
