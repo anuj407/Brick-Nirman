@@ -31,8 +31,8 @@ router.route('/profile').get(verifyJwt, getUserProfile);
 router.route('/update-profile').put(verifyJwt, updateUserProfile);
 router.route('/update-password').put( updatePassword);
 
-router.route('/refresh-token').post(verifyJwt, AccessRefreshToken);
-export default router;
+router.route('/refresh-token').post(AccessRefreshToken);
 
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
+export default router;
