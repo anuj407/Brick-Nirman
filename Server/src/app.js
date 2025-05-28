@@ -9,38 +9,13 @@ import AddToCartRouter from './routes/addToCart.routes.js';
 import userRouter from './routes/user.routes.js';
 import supplierRouter from './routes/supplier.routes.js';
 
-const allowedOrigins = [
-  'https://brick-nirman.vercel.app',
-];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+app.use(cors({
+    origin: "https://brick-nirman.vercel.app",
     credentials: true,
-  })
-);
-
-// Allow preflight for all routes
-app.options('*', cors());
-app.use((err, req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-  });
-});
+    methods: ["GET", "POST", "PUT","PATCH", "DELETE"], 
+    allowedHeaders: ["Content-Type", "Authorization"]
+ }))
 
 
 app.use(express.json({ limit: '10mb' }));
