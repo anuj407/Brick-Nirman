@@ -22,7 +22,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static('public'));
 app.use(cookieParser());
-app.options('*', cors());
+app.options('*', cors({
+  origin: allowedOrigin,
+  credentials: true,
+}));
 
 //import Route
 app.use('/api/v1/orders', orderRouter);
