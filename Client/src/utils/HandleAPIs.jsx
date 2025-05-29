@@ -28,7 +28,6 @@ export const refreshTokens = async () => {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
       },
     });
 
