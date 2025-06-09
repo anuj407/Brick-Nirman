@@ -33,6 +33,7 @@ export const refreshTokens = async () => {
 
     if (response?.ok) {
       const result = await response.json();
+      console.log("Tokens refreshed successfully:", result);
       return result;
     } else {
       return response;

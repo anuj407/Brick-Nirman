@@ -31,10 +31,13 @@ export const generateAccessAndRefreshToken = async (userId) => {
 };
 export const AccessRefreshToken = asyncHandler(async(req,res)=>{
   const refreshToken = req.cookies.refreshToken;
+  console.log("token : "+refreshToken);
+  
   if(!refreshToken){
       throw new ApiError("Refresh token is required",401)
   }
   const user = await User.findOne({refreshToken});
+  console.log("user: ",user);
   if(!user){
       throw new ApiError("Invalid refresh token",401)
   }
