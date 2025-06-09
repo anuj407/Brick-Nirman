@@ -67,11 +67,11 @@ export const loginUser = async (loginData, setUser,setIsLoginOpen) => {
     try {
         const response = await fetch(`${apiUrl}/users/login`, {
             method: 'POST',
+            credentials: 'include', // ✅ Ensures cookies are sent
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(loginData),
-            credentials: 'include', // ✅ Ensures cookies are sent
         });
 
         const result = await response.json();
@@ -109,10 +109,10 @@ export const getUserProfile = async (setUser) => {
     try {
         const response = await fetch(`${apiUrl}/users/profile`, {
             method: 'GET',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
-            credentials: 'include',
         });
 
         const result = await response.json();
