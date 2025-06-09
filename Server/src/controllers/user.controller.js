@@ -100,7 +100,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const option = {
     httpOnly: true,
     secure: true,
-    sameSite: "None" 
+    // sameSite: "None" 
   };
   res
     .status(200)
